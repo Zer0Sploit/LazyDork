@@ -70,6 +70,25 @@ body {
   }
 
 
+  /* Default for desktop and larger screens */
+.dorks {
+    margin: 0 185px; /* Large margin for bigger screens */
+}
+
+/* Adjust margin for screens smaller than 768px (tablets and mobile devices) */
+@media only screen and (max-width: 768px) {
+    .dorks {
+        margin: 0 20px; /* Smaller margin for tablets */
+    }
+}
+
+/* Further adjust margin for very small screens (phones) */
+@media only screen and (max-width: 480px) {
+    .dorks {
+        margin: 0 10px; /* Even smaller margin for phones */
+    }
+}
+
 
   .dork-filled {
     color: #a970ff; /* Color when domain is filled */
