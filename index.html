@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LazyDork Search</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="logo">
+        <span>
+  _                         _____                _    
+ | |                       |  __ \              | |   
+ | |      __ _  ____ _   _ | |  | |  ___   _ __ | | __
+ | |     / _  ||_  /| | | || |  | | / _ \ | '__|| |/ /
+ | |____| (_| | / / | |_| || |__| || (_) || |   |   < 
+ |______|\__,_|/___| \__, ||_____/  \___/ |_|   |_|\_\
+                      __/ |                           
+                                 |___/                           by Zer0droid
+        </span>
+    </div>
+
+    <div class="container">
+        <input type="text" name="text" class="input" placeholder="Enter your domain">
+        <button class="search__btn" id="search__btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22">
+            <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z" fill="#efeff1"></path>
+          </svg>
+        </button>
+      </div>
+
+
+    
+
+      <div class="dorks" style="margin: 0 185px;" id="dork-list">
+
+      </div>
+
+
+</body>
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+    // Organized Google Dorks with <domain> as a placeholder
+    const dorks = {
+        "Find Interesting End-points / File uploads": [
+            "site:*.<domain>",
+            "site:*.*.<domain>",
+            "site:<domain> admin",
+            "site:<domain> ext:php",
+            "site:<domain> ext:aspx",
+            "site:<domain> ext:jsp",
+            "site:<domain> ext:html",
+            "site:<domain> ext:txt",
+            "site:<domain> inurl:test | inurl:env | inurl:dev | inurl:staging | inurl:sandbox | inurl:debug | inurl:temp | inurl:internal | inurl:demo",
+            'site:<domain> (intext:"attach" | intext:"upload" | intext:"choose file")'
+        ],
+
+        "Find Authentication End-points": [
+            'site:<domain> inurl:login | inurl:signin | intitle:Login | intitle:"sign in" | inurl:auth',
+            'site:<domain> inurl:signup | inurl:register | intitle:Signup'
+        ],
+
+        "Find Interesting Files": [
+            'site:<domain> ext:doc | ext:docx | ext:odt | ext:rtf | ext:sxw | ext:psw | ext:ppt | ext:pptx | ext:pps | ext:csv',
+            'site:<domain> ext:xml | ext:conf | ext:cnf | ext:reg | ext:inf | ext:rdp | ext:cfg | ext:txt | ext:ora | ext:ini | ext:env',
+            'site:<domain> ext:bkf | ext:bkp | ext:bak | ext:old | ext:backup | ext:log | ext:txt | ext:sql | ext:dbf | ext:mdb',
+            '"CV" OR "Resume" ext:pdf site:<domain>'
+        ],
+
+        "Directory Listing": [
+            'site:<domain> intitle:index.of',
+            'site:<domain> intext:"To Parent Directory"'
+        ],
+
+        "Miscellaneous": [
+            'site:github.com | site:gitlab.com "<domain>"',
+            'site:stackoverflow.com "<domain>"',
+            'site:pastebin.com "<domain>"',
+            'site:dev.azure.com "<domain>"',
+            'site:onedrive.live.com "<domain>"',
+            'site:digitaloceanspaces.com "<domain>"',
+            'site:docs.google.com/spreadsheets "<domain>"',
+            'site:groups.google.com "<domain>"',
+            'site:s3.amazonaws.com "<domain>"',
+            'site:blob.core.windows.net "<domain>"',
+            'site:googleapis.com "<domain>"',
+            'site:drive.google.com "<domain>"'
+        ]
+    };
+
+    const dorkList = document.getElementById('dork-list');
+
+    // Create template of dorks
+    const dorkTemplate = [];
+
+    // Function to create and organize dork items
+    function createDorkSection(title, dorksArray) {
+        const section = document.createElement('div');
+        section.classList.add('dork-section');
+
+        const sectionTitle = document.createElement('h3');
+        sectionTitle.textContent = title;
+        section.appendChild(sectionTitle);
+
+        dorksArray.forEach(dork => {
+            const dorkItem = document.createElement('div');
+            dorkItem.classList.add('dork-item');
+
+            const dorkText = document.createElement('span');
+            dorkText.classList.add('dork-placeholder'); // Start as placeholder
+            dorkText.textContent = dork;
+            dorkItem.appendChild(dorkText);
+
+            const searchButton = document.createElement('button');
+            searchButton.innerHTML = '<span>Search</span>';
+            searchButton.classList.add('visible'); // Visible but only functional after domain input
+
+            dorkItem.appendChild(searchButton);
+            section.appendChild(dorkItem);
+
+            // Store the template (element and original text)
+            dorkTemplate.push({
+                element: dorkText, // The span element containing the dork text
+                originalDork: dork, // The original dork string with <domain> placeholder
+                searchButton: searchButton // The button element
+            });
+        });
+
+        dorkList.appendChild(section);
+    }
+
+    // Dynamically populate the dorks on page load
+    Object.keys(dorks).forEach(category => {
+        createDorkSection(category, dorks[category]);
+    });
+
+    // Function to handle updating dorks with the entered domain
+    function updateDorks(domain) {
+        dorkTemplate.forEach(item => {
+            const { element, originalDork, searchButton } = item; // Destructure the object
+
+            if (domain) {
+                // Replace <domain> with the actual domain
+                const newDork = originalDork.replace(/<domain>/g, domain);
+                element.textContent = newDork;
+                element.classList.remove('dork-placeholder');
+                element.classList.add('dork-filled'); // Add filled class to change color
+
+                // Update the search button functionality for the new dork
+                searchButton.classList.add('visible');
+                searchButton.onclick = function() {
+                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(newDork)}`;
+                    window.open(searchUrl, '_blank');
+                };
+            } else {
+                // Reset to default state when the input is empty
+                element.textContent = originalDork;
+                element.classList.remove('dork-filled');
+                element.classList.add('dork-placeholder'); // Reset to placeholder color
+
+                // Remove search button functionality
+                searchButton.onclick = null;
+            }
+        });
+    }
+
+    // Event listener for input changes in the domain field (update after full input)
+    document.querySelector('.input').addEventListener('input', function() {
+        const domain = this.value.trim();
+        updateDorks(domain);
+    });
+
+    // Event listener for the "search__btn" click
+    document.getElementById('search__btn').addEventListener('click', function() {
+        const domain = document.querySelector('.input').value.trim();
+        if (domain) {
+            updateDorks(domain);
+        } else {
+            alert('Please enter a domain');
+        }
+    });
+});
+
+
+    </script>
+    
+    
+    
+    
+    
+
+</script>
+</html>
