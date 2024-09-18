@@ -1,0 +1,143 @@
+body {
+    background-color: #212121;
+    color: #ffffff;
+    font-family: monospace;
+}
+
+.logo {
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    white-space: pre;
+}
+
+.logo span {
+    color: #a970ff; /* Apply the desired color */
+}
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+  }
+
+  
+  
+  .input {
+    max-width: 190px;
+    height: 50%;
+    outline: none;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #53535f;
+    caret-color: #f7f7f8;
+    color: #fff;
+    padding: 7px 10px;
+    border: 2px solid transparent;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    margin-right: 1px;
+    transition: all .2s ease;
+  }
+  
+  .input:hover {
+    border: 2px solid rgba(255, 255, 255, 0.16);
+  }
+  
+  .input:focus {
+    border: 2px solid #a970ff;
+    background-color: #0e0e10;
+  }
+  
+  .search__btn {
+    border: none;
+    cursor: pointer;
+    background-color: rgba(42, 42, 45, 1);
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    height: 100%;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .search__btn:hover {
+    background-color: rgba(54, 54, 56, 1);
+  }
+
+
+
+  .dork-filled {
+    color: #a970ff; /* Color when domain is filled */
+}
+
+.dork-placeholder {
+    color: gray; /* Color when no domain is entered (default state) */
+}
+
+
+/* Dorks styling */
+.dork-item {
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    transition: color 0.5s ease; /* Smooth color transition */
+}
+
+.dork-placeholder {
+    color: lightgrey; /* Pre-filled dorks in light grey */
+}
+
+.dork-filled {
+    color: #a970ff; /* Color changes to this after domain is filled */
+}
+
+.dork-item button {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #a970ff;
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    font-size: 14px;
+    padding: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: all 0.5s;
+    visibility: hidden; /* Hidden until the domain is filled */
+}
+
+.dork-item button.visible {
+    visibility: visible; /* Becomes visible after domain is filled */
+}
+
+.dork-item button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.dork-item button span:after {
+    content: "»";
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -10px;
+    transition: 0.5s;
+}
+
+.dork-item button:hover span {
+    padding-right: 10px;
+}
+
+.dork-item button:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
